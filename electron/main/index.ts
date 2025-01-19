@@ -3,9 +3,8 @@ import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 import os from 'node:os'
-import express from 'express'
-import cors from 'cors'
-import {getSqlite3} from '../better-sqlite3'
+import fastify, { FastifyInstance } from 'fastify'
+import { getSqlite3 } from '../better-sqlite3'
 const require = createRequire(import.meta.url)
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -79,17 +78,21 @@ async function createWindow() {
   })
   // win.webContents.on('will-navigate', (event, url) => { }) #344
 
-    // 启动 Express 服务器
-    const server = express();
-    server.use(cors()); // 允许跨域请求
-  
-    server.get('/', (req, res) => {
-      res.json({ message: 'Hello from Electron backend!' });
-    });
-  
-    server.listen(4399, () => {
-      console.log('Server is running on http://127.0.0.1:3000');
-    });
+  // 启动 Fastify 服务器
+  const server: FastifyInstance = fastify({ logger: true });
+
+  server.get('/', async (request, reply) => {
+    return { message: 'Hello from Electron backend!' };
+  });
+
+  server.listen({ port: 4399, host: '127.0.0.1' }, (err, address) => {
+    if (err) {
+      console.error(err);
+      process.exit(1);
+    }
+    console.log(`Server is running on ${address}`);
+  });
+
 }
 
 app.whenReady().then(() => {
