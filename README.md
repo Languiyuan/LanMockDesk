@@ -1,8 +1,6 @@
-This repository is based on `electron-vite-vue`, with the addition of `better-sqlite3` and express practices, used for the technical verification of `LanmockDesk`.
+LanmockDesk 是LanMock桌面端，脱离服务器，降低使用成本，一定程度扩大应用范围。
 
-这个仓库基于electron-vite-vue，增加了better-sqlite3和express实践，用于LanmockDesk技术验证。
-
-https://vite.electron.js.cn/
+框架搭建依赖 https://vite.electron.js.cn/
 
 需要注意：
 https://github.com/WiseLibs/better-sqlite3/issues/549#issuecomment-774506826
