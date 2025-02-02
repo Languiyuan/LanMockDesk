@@ -5,7 +5,8 @@ import path from 'node:path'
 import os from 'node:os'
 import fastify, { FastifyInstance } from 'fastify'
 import { dbConnections, initDatabase } from '../db'
-// import { getSqlite3 } from '../better-sqlite3'
+import { setupHandlers } from './handlers'
+
 const require = createRequire(import.meta.url)
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -44,6 +45,8 @@ let win: BrowserWindow | null = null
 const preload = path.join(__dirname, '../preload/index.mjs')
 const indexHtml = path.join(RENDERER_DIST, 'index.html')
 
+
+
 async function createWindow() {
   win = new BrowserWindow({
     title: 'Main window',
@@ -80,20 +83,22 @@ async function createWindow() {
   // win.webContents.on('will-navigate', (event, url) => { }) #344
 
   // 启动 Fastify 服务器
-  const server: FastifyInstance = fastify({ logger: true });
+  const server: FastifyInstance = fastify({ logger: true })
 
   server.get('/', async (request, reply) => {
-    return { message: 'Hello from Electron backend!' };
-  });
+    return { message: 'Hello from Electron backend!' }
+  })
 
   server.listen({ port: 4399, host: '127.0.0.1' }, (err, address) => {
     if (err) {
-      console.error(err);
-      process.exit(1);
+      console.error(err)
+      process.exit(1)
     }
-    console.log(`Server is running on ${address}`);
-  });
+    console.log(`Server is running on ${address}`)
+  })
 
+  // 设置 IPC 处理函数
+  setupHandlers(win!)
 }
 
 app.whenReady().then(() => {
@@ -134,7 +139,7 @@ app.whenReady().then(() => {
   // }, 4000)
 
   const db = initDatabase(path.join(process.env.APP_ROOT, 'todos.db'), 'todos')
-  console.log('db',db)
+  console.log('db', db)
   console.log('dbConnections', dbConnections)
 })
 
@@ -161,18 +166,18 @@ app.on('activate', () => {
 })
 
 // New window example arg: new windows url
-ipcMain.handle('open-win', (_, arg) => {
-  const childWindow = new BrowserWindow({
-    webPreferences: {
-      preload,
-      nodeIntegration: true,
-      contextIsolation: false,
-    },
-  })
+// ipcMain.handle('open-win', (_, arg) => {
+//   const childWindow = new BrowserWindow({
+//     webPreferences: {
+//       preload,
+//       nodeIntegration: true,
+//       contextIsolation: false,
+//     },
+//   })
 
-  if (VITE_DEV_SERVER_URL) {
-    childWindow.loadURL(`${VITE_DEV_SERVER_URL}#${arg}`)
-  } else {
-    childWindow.loadFile(indexHtml, { hash: arg })
-  }
-})
+//   if (VITE_DEV_SERVER_URL) {
+//     childWindow.loadURL(`${VITE_DEV_SERVER_URL}#${arg}`)
+//   } else {
+//     childWindow.loadFile(indexHtml, { hash: arg })
+//   }
+// })
