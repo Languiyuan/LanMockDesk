@@ -1,0 +1,20 @@
+[
+  {
+    "sign": "exampleCredential1",
+    "create_time": "2025-02-02 16:24:00",
+    "update_time": "2025-02-02 16:24:00",
+    "base_url": "http://example1.com",
+    "name": "Example Project 1",
+    "description": "This is an example project description for the first item.",
+    "path": "db/example1"
+  },
+  {
+    "sign": "exampleCredential2",
+    "create_time": "2025-02-02 16:24:00",
+    "update_time": "2025-02-02 16:24:00",
+    "base_url": "http://example2.com",
+    "name": "Example Project 2",
+    "description": "This is an example project description for the second item.",
+    "path": "db/example2"
+  }
+]

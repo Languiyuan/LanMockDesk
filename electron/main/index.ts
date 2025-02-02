@@ -4,7 +4,8 @@ import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 import os from 'node:os'
 import fastify, { FastifyInstance } from 'fastify'
-import { getSqlite3 } from '../better-sqlite3'
+import { dbConnections, initDatabase } from '../db'
+// import { getSqlite3 } from '../better-sqlite3'
 const require = createRequire(import.meta.url)
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -97,40 +98,44 @@ async function createWindow() {
 
 app.whenReady().then(() => {
   createWindow()
-  setTimeout(() => {
-    const db = getSqlite3( path.join(process.env.APP_ROOT, 'todos.db'))
-    // db.exec('CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, age INTEGER)')
-    // const newTask = {
-    //   title: 'New Task Title',
-    //   description: 'This is a new task description.',
-    //   due_date: '2023-10-05',
-    //   priority: 3,
-    //   status: 0,
-    //   created_at: new Date().toISOString(),
-    //   completed_at: null,
-    //   deleted_at: null,
-    //   deleted: 0
-    // };
+  // setTimeout(() => {
+  //   const db = getSqlite3( path.join(process.env.APP_ROOT, 'todos.db'))
+  //   // db.exec('CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, age INTEGER)')
+  //   const newTask = {
+  //     title: 'New Task Title',
+  //     description: 'This is a new task description.',
+  //     due_date: '2023-10-05',
+  //     priority: 3,
+  //     status: 0,
+  //     created_at: new Date().toISOString(),
+  //     completed_at: null,
+  //     deleted_at: null,
+  //     deleted: 0
+  //   };
     
-    // // Prepare and execute the INSERT statement
-    // db.prepare(`
-    //   INSERT INTO tasks (title, description, due_date, priority, status, created_at, completed_at, deleted_at, deleted)
-    //   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-    // `).run(
-    //   newTask.title,
-    //   newTask.description,
-    //   newTask.due_date,
-    //   newTask.priority,
-    //   newTask.status,
-    //   newTask.created_at,
-    //   newTask.completed_at,
-    //   newTask.deleted_at,
-    //   newTask.deleted
-    // );
+  //   // Prepare and execute the INSERT statement
+  //   db.prepare(`
+  //     INSERT INTO tasks (title, description, due_date, priority, status, created_at, completed_at, deleted_at, deleted)
+  //     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+  //   `).run(
+  //     newTask.title,
+  //     newTask.description,
+  //     newTask.due_date,
+  //     newTask.priority,
+  //     newTask.status,
+  //     newTask.created_at,
+  //     newTask.completed_at,
+  //     newTask.deleted_at,
+  //     newTask.deleted
+  //   );
     
-    // console.log('New task added successfully.');
-    console.log('db',db)
-  }, 4000)
+  //   console.log('New task added successfully.');
+  //   console.log('db',db)
+  // }, 4000)
+
+  const db = initDatabase(path.join(process.env.APP_ROOT, 'todos.db'), 'todos')
+  console.log('db',db)
+  console.log('dbConnections', dbConnections)
 })
 
 app.on('window-all-closed', () => {
