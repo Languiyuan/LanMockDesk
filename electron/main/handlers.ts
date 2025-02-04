@@ -1,4 +1,5 @@
 import { ipcMain, dialog, BrowserWindow} from 'electron'
+import { createAndInitDatabaseIfNotDbFile } from '../db'
 
 export function setupHandlers(win: BrowserWindow) {
   // 添加 show-folder-dialog 的 IPC 处理
@@ -6,6 +7,8 @@ export function setupHandlers(win: BrowserWindow) {
     const result = await dialog.showOpenDialog(win, {
       properties: ['openDirectory']
     })
+    createAndInitDatabaseIfNotDbFile(result.filePaths[0])
+    console.log('result',result)
     return result
   })
 
