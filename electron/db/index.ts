@@ -14,7 +14,7 @@ function initDatabase(dbPath: string): BetterSqlite3Database {
     // 初始化数据库连接
     const db = new Database(dbPath, { verbose: console.log });
     dbConnections.set(dbPath, db);
-
+    console.log('dbConnections',dbConnections)
     return db;
 }
 
