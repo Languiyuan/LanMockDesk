@@ -2,24 +2,18 @@ import Database, { type Database as BetterSqlite3Database } from 'better-sqlite3
 import { join } from 'node:path'
 import { existsSync, mkdirSync } from 'node:fs'
 
-// 定义数据库连接键的类型
-type DbConnectionKey = {
-    dbPath: string;
-};
-
 // 存储多个数据库连接的映射
-const dbConnections: Map<DbConnectionKey, BetterSqlite3Database> = new Map();
+const dbConnections: Map<string, BetterSqlite3Database> = new Map();
 
 // 动态初始化数据库连接的函数
 function initDatabase(dbPath: string): BetterSqlite3Database {
-    const key: DbConnectionKey = { dbPath };
-    if (dbConnections.has(key)) {
-        return dbConnections.get(key)!;
+    if (dbConnections.has(dbPath)) {
+        return dbConnections.get(dbPath)!;
     }
 
     // 初始化数据库连接
     const db = new Database(dbPath, { verbose: console.log });
-    dbConnections.set(key, db);
+    dbConnections.set(dbPath, db);
 
     return db;
 }
@@ -35,6 +29,8 @@ export function createAndInitDatabaseIfNotDbFile(folderPath: string): string {
 
   initDatabase(dbFilePath)
   createProjectTable(dbFilePath)
+  createApiTable(dbFilePath)
+  createFoldersTable(dbFilePath)
 
   console.log(`Database created and initialized at: ${dbFilePath}`)
   return dbFilePath
@@ -42,7 +38,7 @@ export function createAndInitDatabaseIfNotDbFile(folderPath: string): string {
 
 // 新增函数：在指定数据库中创建表
 function createProjectTable(dbPath: string): void {
-    const db = initDatabase(dbPath);
+    const db = dbConnections.get(dbPath);
 
     // 检查表是否存在
     const tableExistsQuery = `SELECT name FROM sqlite_master WHERE type='table' AND name='project';`;
@@ -73,6 +69,68 @@ function createProjectTable(dbPath: string): void {
             FOR EACH ROW
             BEGIN
                 UPDATE project SET update_time = CURRENT_TIMESTAMP WHERE id = OLD.id;
+            END;
+        `;
+        db.exec(updateTriggerQuery);
+    }
+}
+
+// 创建目录表
+function createFoldersTable(dbPath: string): void {
+    const db = dbConnections.get(dbPath);
+
+    // 检查表是否存在
+    const tableExistsQuery = `SELECT name FROM sqlite_master WHERE type='table' AND name='folders';`;
+    const tableExists = db.prepare(tableExistsQuery).get();
+
+    if (!tableExists) {
+        const createTableQuery = `
+            CREATE TABLE folders (
+                id INTEGER PRIMARY KEY,
+                name VARCHAR(200) NOT NULL
+            )
+        `;
+        db.exec(createTableQuery);
+    }
+}
+
+//  创建 api 表
+function createApiTable(dbPath: string): void {
+    const db = dbConnections.get(dbPath);
+
+    // 检查表是否存在
+    const tableExistsQuery = `SELECT name FROM sqlite_master WHERE type='table' AND name='apis';`;
+    const tableExists = db.prepare(tableExistsQuery).get();
+
+    if (!tableExists) {
+        const createTableQuery = `
+            CREATE TABLE apis (
+                id INTEGER PRIMARY KEY,
+                projectId INTEGER NOT NULL,
+                catalogId INTEGER,
+                name VARCHAR(50) NOT NULL,
+                url VARCHAR(200) NOT NULL,
+                content TEXT,
+                type VARCHAR(50),
+                responseDelay INTEGER,
+                description VARCHAR(200),
+                isOpen BOOLEAN NOT NULL DEFAULT 1,
+                isDeleted BOOLEAN NOT NULL DEFAULT 0,
+                create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                update_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                paramCheckStatus VARCHAR(50),
+                paramJson TEXT
+            )
+        `;
+        db.exec(createTableQuery);
+
+        // 创建触发器以在更新记录时自动更新 update_time
+        const updateTriggerQuery = `
+            CREATE TRIGGER IF NOT EXISTS update_api_timestamp
+            AFTER UPDATE ON apis
+            FOR EACH ROW
+            BEGIN
+                UPDATE apis SET update_time = CURRENT_TIMESTAMP WHERE id = OLD.id;
             END;
         `;
         db.exec(updateTriggerQuery);
