@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <button @click="selectFolder">选择文件夹</button>
+    <button class="w-72"  @click="selectFolder">选择文件夹</button>
     <button @click="selectDatabaseFile">选择数据库文件</button>
     <p v-if="selectedFolderPath">选择的文件夹路径: {{ selectedFolderPath }}</p>
     <p v-if="selectedDatabaseFilePath">选择的数据库文件路径: {{ selectedDatabaseFilePath }}</p>

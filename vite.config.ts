@@ -3,6 +3,7 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import electron from 'vite-plugin-electron/simple'
 import pkg from './package.json'
+import tailwindcss from 'tailwindcss';
 
 // https://vitejs.dev/config/
 export default defineConfig(({ command }) => {
@@ -59,7 +60,9 @@ export default defineConfig(({ command }) => {
         // Ployfill the Electron and Node.js API for Renderer process.
         // If you want use Node.js in Renderer process, the `nodeIntegration` needs to be enabled in the Main process.
         // See 👉 https://github.com/electron-vite/vite-plugin-electron-renderer
-        renderer: {},
+        renderer: {
+
+        },
       }),
     ],
     server: process.env.VSCODE_DEBUG && (() => {
@@ -70,5 +73,10 @@ export default defineConfig(({ command }) => {
       }
     })(),
     clearScreen: false,
+    css: {
+      postcss: {
+        plugins: [tailwindcss],
+      }
+    },
   }
 })
