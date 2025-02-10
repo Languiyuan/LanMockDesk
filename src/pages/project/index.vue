@@ -8,40 +8,22 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue"
+import { NButton } from 'naive-ui'
+import { useLinkDB } from '../../hooks/useLinkDB'
 
-const selectedFolderPath = ref<string | null>(null)
-const selectedDatabaseFilePath = ref<string | null>(null)
-
-async function selectFolder() {
-  const { canceled, filePaths } = await window.ipcRenderer.invoke('showFolderDialog')
-  if (!canceled && filePaths.length > 0) {
-    selectedFolderPath.value = filePaths[0]
-  }
-}
-
-async function selectDatabaseFile() {
-  const filePath = await window.ipcRenderer.invoke('showDatabaseFileDialog')
-  if (filePath) {
-    selectedDatabaseFilePath.value = filePath
-  }
-}
+const { selectedFolderPath, selectedDatabaseFilePath, selectFolder, selectDatabaseFile } = useLinkDB()
 </script>
 
-<style scoped>
-/* @import url(); 引入css类 */
-
-button {
-  padding: 10px 20px;
-  margin-top: 20px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #0056b3;
-}
+<style lang="scss" scoped>
+// .wrapper {
+//   width: 100%;
+//   height: 100%;
+//   background-color: black;
+//   padding: 40px;
+//   .box {
+//     width: 200px;
+//     height: 200px;
+//     background-color: white;
+//   }
+// }
 </style>

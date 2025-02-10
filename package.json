@@ -28,10 +28,16 @@
   "devDependencies": {
     "@types/better-sqlite3": "^7.6.12",
     "@types/cors": "^2.8.17",
-    "@vitejs/plugin-vue": "^5.0.4",
     "@types/js-beautify": "^1.14.3",
+    "@vitejs/plugin-vue": "^5.0.4",
+    "@vueuse/core": "^10.9.0",
+    "ace-builds": "1.32.8",
     "electron": "^29.1.1",
     "electron-builder": "^24.13.3",
+    "js-beautify": "^1.15.1",
+    "naive-ui": "^2.41.0",
+    "sass": "^1.84.0",
+    "tailwindcss": "^3.4.1",
     "typescript": "^5.4.2",
     "vite": "^5.1.5",
     "vite-plugin-electron": "^0.28.4",
@@ -39,12 +45,7 @@
     "vue": "^3.4.21",
     "vue-router": "^4.5.0",
     "vue-tsc": "^2.0.6",
-    "js-beautify": "^1.15.1",
-    "@vueuse/core": "^10.9.0",
-    "ace-builds": "1.32.8",
-    "vue3-ace-editor": "^2.2.4",
-    "sass": "^1.72.0",
-    "tailwindcss": "^3.4.1"
+    "vue3-ace-editor": "^2.2.4"
   },
   "dependencies": {
     "better-sqlite3": "^11.7.2",

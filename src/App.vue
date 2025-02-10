@@ -1,13 +1,12 @@
 <script setup lang="ts">
-
+import { NConfigProvider } from 'naive-ui';
+import { darkTheme , lightTheme} from 'naive-ui'
 </script>
 
 <template>
-  <div class="flex-center">
-    <!-- Place static files into the <code>/public</code> folder
-    <img style="width: 2.4em; margin-left: .4em;" src="/logo.svg" alt="Logo"> -->
+  <NConfigProvider  :theme="lightTheme">
     <RouterView />
-  </div>
+  </NConfigProvider>
 </template>
 
 
