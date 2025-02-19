@@ -14,7 +14,7 @@ const routes: Array<RouteRecordRaw> = [
 ]
 
 const router = createRouter({
-  history: createWebHashHistory(), // 修改: createWebHistory() 改为 createWebHashHistory()
+  history: createWebHashHistory(), // electron 必须使用 hash 模式
   routes
 })
 
