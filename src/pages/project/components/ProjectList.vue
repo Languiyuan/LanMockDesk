@@ -29,8 +29,8 @@
           :info="{
             projectName: '示例项目示例项目示例项目示例项目示例项目示例项目',
             projectSign: 'example',
-            baseUrl: 'http://example.com',
-            createTime: '2023-01-01',
+            baseUrl: 'http://exampleexampleexampleexampleexample.com',
+            createTime: '2023-01-01 12:00:00',
             updateTime: '2023-01-01',
             status: 1
           }"
@@ -41,7 +41,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 import { Add, FlashOutline } from '@vicons/ionicons5'
 import { NButton, NInput, NIcon, NScrollbar, NCard } from 'naive-ui'
@@ -51,12 +51,11 @@ const width = ref(400)
 let startX = 0
 let startWidth = 0
 
-const startResize = (e) => {
+const startResize = (e: MouseEvent) => {
   // 添加禁用文本选择的样式
   document.body.style.userSelect = 'none'
   document.body.style.webkitUserSelect = 'none'
-  document.body.style.mozUserSelect = 'none'
-  document.body.style.msUserSelect = 'none'
+
 
   startX = e.clientX
   startWidth = width.value
@@ -64,7 +63,7 @@ const startResize = (e) => {
   window.addEventListener('mouseup', stopResize)
 }
 
-const resize = (e) => {
+const resize = (e: MouseEvent) => {
   const newWidth = startWidth + (e.clientX - startX)
   if (newWidth > 200 && newWidth < 400) {
     width.value = newWidth
@@ -75,8 +74,6 @@ const stopResize = () => {
   // 移除禁用文本选择的样式
   document.body.style.userSelect = ''
   document.body.style.webkitUserSelect = ''
-  document.body.style.mozUserSelect = ''
-  document.body.style.msUserSelect = ''
 
   window.removeEventListener('mousemove', resize)
   window.removeEventListener('mouseup', stopResize)

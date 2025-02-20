@@ -33,6 +33,7 @@
     "@vitejs/plugin-vue": "^5.0.4",
     "@vueuse/core": "^10.9.0",
     "ace-builds": "1.32.8",
+    "dayjs": "^1.11.13",
     "electron": "^29.1.1",
     "electron-builder": "^24.13.3",
     "js-beautify": "^1.15.1",
