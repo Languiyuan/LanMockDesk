@@ -1,8 +1,11 @@
 <template>
-  <div class="pr-3 pb-2">
-    <n-card class="w-full">
+  <div class="ml-4 pr-3 pb-2">
+    <n-card 
+      class="w-full hover:shadow-lg hover:transform hover:scale-105 transition-transform duration-300"
+      :style="{ backgroundColor: isCur ? 'rgba(2, 173, 162, 0.6)' : '' }"
+    >
       <template #cover>
-        <div class="px-2 py-2">
+        <div class="px-2 py-2 cursor-pointer">
           <div class="flex items-center">
             <div :class="['w-3 h-3 rounded-full mr-2', dotColor]"></div>
             <n-ellipsis
@@ -16,14 +19,14 @@
               :options="options"
               @select="handleSelect"
             >
-              <n-button text style="font-size: 24px; margin-left: 4px; margin-right: 4px;">
+              <n-button text style="font-size: 24px; margin-left: 4px; margin-right: 4px;" @click.stop="() => {}">
                 <n-icon>
                   <EllipsisHorizontal />
                 </n-icon>
               </n-button>
             </n-dropdown>
 
-            <n-switch v-model:value="active" :disabled="info.status === 3" />
+            <n-switch v-model:value="active" :disabled="info.status === 3"  @click.stop="() => {}"/>
           </div>
 
           <div class="flex justify-between mt-4">
@@ -39,12 +42,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, h } from 'vue'
+import type {Component} from 'vue'
 import { EllipsisHorizontal, Pencil, TrashOutline  } from '@vicons/ionicons5'
 import { NCard, NDropdown, NButton, NIcon, NSwitch, NEllipsis } from 'naive-ui'
 import dayjs from 'dayjs'
-import { h } from 'vue'
-import type {Component} from 'vue'
+import { ProjectInfo } from '../types'
 function renderIcon(icon: Component) {
   return () => {
     return h(NIcon, null, {
@@ -53,17 +56,9 @@ function renderIcon(icon: Component) {
   }
 }
 
-interface Info {
-  projectName: string
-  projectSign: string
-  baseUrl: string
-  createTime: string
-  updateTime: string
-  status: number
-}
-
 const props = defineProps<{
-  info: Info
+  info: ProjectInfo
+  isCur: boolean
   width: number
 }>()
 

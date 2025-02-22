@@ -10,7 +10,7 @@
         </n-icon>
       </n-button>
 
-      <n-input placeholder="name or url">
+      <n-input class="text-left" type="text" placeholder="name or url">
         <template #suffix>
           <n-icon :component="FlashOutline" />
         </template>
@@ -21,20 +21,15 @@
       @mousedown="startResize"
     ></div>
 
-    <div class="flex-1 overflow-y-auto pl-4 pr-1 pb-4">
+    <div class="flex-1 overflow-y-auto  pr-1 pb-4">
       <n-scrollbar style="height: 100%">
         <ProjectCard
-          v-for="item in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]"
-          :key="item"
-          :info="{
-            projectName: '示例项目示例项目示例项目示例项目示例项目示例项目',
-            projectSign: 'example',
-            baseUrl: 'http://exampleexampleexampleexampleexample.com',
-            createTime: '2023-01-01 12:00:00',
-            updateTime: '2023-01-01',
-            status: 1
-          }"
+          v-for="item in projectList"
+          :key="item.projectSign"
+          :info="item"
           :width="width"
+          :isCur="!!(curSelProject && curSelProject.projectSign === item.projectSign)"
+          @click="handleSelProject(item)"
         ></ProjectCard>
       </n-scrollbar>
     </div>
@@ -44,8 +39,24 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { Add, FlashOutline } from '@vicons/ionicons5'
-import { NButton, NInput, NIcon, NScrollbar, NCard } from 'naive-ui'
+import { NButton, NInput, NIcon, NScrollbar } from 'naive-ui'
 import ProjectCard from './ProjectCard.vue'
+import { ProjectInfo } from '../types'
+
+const projectList = ref<ProjectInfo[]>([{
+            projectName: '示例项目',
+            projectSign: 'example',
+            baseUrl: 'http://12.com',
+            createTime: '2023-01-01 12:00:00',
+            updateTime: '2023-01-01',
+            status: 1
+          }])
+
+const curSelProject = ref<ProjectInfo | null>(null)
+const  handleSelProject = (projectInfo: ProjectInfo) => {
+  curSelProject.value = projectInfo
+}
+
 
 const width = ref(400)
 let startX = 0
