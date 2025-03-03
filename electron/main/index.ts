@@ -6,6 +6,7 @@ import os from 'node:os'
 import fastify, { FastifyInstance } from 'fastify'
 import { dbConnections, initDatabase } from '../db'
 import { setupHandlers } from './handlers'
+import { initAppConfig } from './senders'
 
 const require = createRequire(import.meta.url)
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -69,6 +70,9 @@ async function createWindow() {
   } else {
     win.loadFile(indexHtml)
   }
+
+  // 初始化appConfig
+  initAppConfig(win)
 
   // Test actively push message to the Electron-Renderer
   win.webContents.on('did-finish-load', () => {
