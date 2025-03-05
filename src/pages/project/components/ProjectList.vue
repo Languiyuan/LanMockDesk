@@ -1,7 +1,8 @@
 <template>
   <div
-    class="flex flex-col relative overflow-hidden max-w-[400px] min-w-[200px] h-full"
-    :style="{ width: width + 'px' }"
+    class="h-full flex flex-col relative overflow-hidden transition-all duration-300"
+    :class="{ 'max-w-[400px]': !isCollapsed, 'max-w-[0px]': isCollapsed }"
+    :style="{ width: isCollapsed ? '0px' : width + 'px' }"
   >
     <div class="h-16 flex items-center px-4">
       <n-button class="mr-2" text style="font-size: 24px" :focusable="false">
@@ -42,6 +43,10 @@ import { Add, FlashOutline } from "@vicons/ionicons5";
 import { NButton, NInput, NIcon, NScrollbar } from "naive-ui";
 import ProjectCard from "./ProjectCard.vue";
 import { ProjectInfo } from "../types";
+
+const props = defineProps<{
+  isCollapsed: boolean
+}>();
 
 const projectList = ref<ProjectInfo[]>([
   {
@@ -89,7 +94,7 @@ const startResize = (e: MouseEvent) => {
 
 const resize = (e: MouseEvent) => {
   const newWidth = startWidth + (e.clientX - startX);
-  if (newWidth > 200 && newWidth > 400) {
+  if (newWidth > 200 && newWidth < 400) {
     width.value = newWidth;
   }
 };

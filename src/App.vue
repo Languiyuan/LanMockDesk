@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { NConfigProvider } from 'naive-ui'
+import { NConfigProvider, NMessageProvider } from 'naive-ui'
 import { darkTheme, lightTheme } from 'naive-ui'
 import { computed, onMounted } from 'vue'
 import { useAppConfig } from './stores/modules/appConfig'
@@ -30,7 +30,9 @@ onMounted(() => {
     :style="{ backgroundColor: theme === 'darkTheme' ? '#242424' : '#ffffff' }"
   >
     <NConfigProvider :theme="theme === 'darkTheme' ? darkTheme : lightTheme">
-      <RouterView />
+      <NMessageProvider>
+        <RouterView />
+      </NMessageProvider>
     </NConfigProvider>
   </div>
 </template>

@@ -1,14 +1,16 @@
 <template>
   <div class="flex-1 flex flex-col">
     <!-- 搜索表单 -->
-    <div class="p-4 bg-white">
-      <n-form inline :model="searchForm" class="flex items-center gap-4">
-        <n-form-item label="接口名称" path="name">
-          <n-input v-model:value="searchForm.name" placeholder="请输入接口名称" />
-        </n-form-item>
-        <n-form-item label="接口URL" path="url">
-          <n-input v-model:value="searchForm.url" placeholder="请输入接口URL" />
-        </n-form-item>
+    <div class="px-4">
+      <n-form inline :model="searchForm" class="flex items-center justify-between w-full">
+        <div class="flex items-center gap-4">
+          <n-form-item label="接口名称" path="name">
+            <n-input v-model:value="searchForm.name" placeholder="请输入接口名称" class="text-left" />
+          </n-form-item>
+          <n-form-item label="接口URL" path="url">
+            <n-input v-model:value="searchForm.url" placeholder="请输入接口URL" class="text-left" />
+          </n-form-item>
+        </div>
         <n-form-item>
           <n-button type="primary" @click="handleSearch">搜索</n-button>
         </n-form-item>
