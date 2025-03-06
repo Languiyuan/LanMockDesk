@@ -1,5 +1,5 @@
 <template>
-  <div class="min-w-[800px] min-h-[600px] h-screen flex">
+  <div class="min-w-[900px] min-h-[400px] h-screen flex">
     <div class="flex items-center">
       <ProjectList @select-project="handleSelectProject" :isCollapsed="isCollapsed"></ProjectList>
       <n-tooltip placement="right" trigger="hover">
