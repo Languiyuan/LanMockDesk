@@ -12,7 +12,7 @@
           </n-form-item>
         </div>
         <n-form-item>
-          <n-button type="primary" @click="handleSearch">搜索</n-button>
+          <n-button type="primary" @click="handleSearch" :loading="loading">搜索</n-button>
         </n-form-item>
       </n-form>
     </div>
@@ -24,17 +24,25 @@
         :data="tableData"
         :pagination="pagination"
         :bordered="false"
+        :scroll-x="1200"
+        style="height: 100%"
         striped
+        flex-height
+        :loading="loading"
+        remote
       />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { h, ref, reactive } from 'vue'
+import { h, ref, reactive, onMounted } from 'vue'
 import { NForm, NFormItem, NInput, NButton, NDataTable, NSpace, NPopconfirm } from 'naive-ui'
 import type { DataTableColumns } from 'naive-ui'
 import type { ApiInfo } from '../types'
+
+// 加载状态
+const loading = ref(false)
 
 // 搜索表单数据
 const searchForm = reactive({
@@ -48,15 +56,21 @@ const tableData = ref<ApiInfo[]>([])
 // 分页配置
 const pagination = reactive({
   page: 1,
-  pageSize: 10,
+  pageSize: 20,
+  itemCount: 0,
   showSizePicker: true,
   pageSizes: [10, 20, 30, 40],
+  prefix({ itemCount }: any) {
+    return `共 ${itemCount} 条`
+  },
   onChange: (page: number) => {
     pagination.page = page
+    fetchData()
   },
   onUpdatePageSize: (pageSize: number) => {
     pagination.pageSize = pageSize
     pagination.page = 1
+    fetchData()
   }
 })
 
@@ -144,10 +158,27 @@ const columns: DataTableColumns<ApiInfo> = [
   }
 ]
 
+// 获取表格数据
+const fetchData = async () => {
+  loading.value = true
+  try {
+    // 模拟异步请求
+    await new Promise(resolve => setTimeout(resolve, 1000))
+    // TODO: 实现实际的数据获取逻辑
+    tableData.value = []
+    // 更新总数
+    pagination.itemCount = 100 // 这里应该是实际的数据总数
+  } catch (error) {
+    console.error('获取数据失败:', error)
+  } finally {
+    loading.value = false
+  }
+}
+
 // 搜索处理函数
-const handleSearch = () => {
-  // TODO: 实现搜索逻辑
-  console.log('search:', searchForm)
+const handleSearch = async () => {
+  pagination.page = 1
+  await fetchData()
 }
 
 // 编辑处理函数
@@ -157,8 +188,19 @@ const handleEdit = (row: ApiInfo) => {
 }
 
 // 删除处理函数
-const handleDelete = (row: ApiInfo) => {
-  // TODO: 实现删除逻辑
-  console.log('delete:', row)
+const handleDelete = async (row: ApiInfo) => {
+  loading.value = true
+  try {
+    // TODO: 实现删除逻辑
+    console.log('delete:', row)
+    await fetchData()
+  } finally {
+    loading.value = false
+  }
 }
+
+// 组件挂载时获取数据
+onMounted(() => {
+  fetchData()
+})
 </script>
