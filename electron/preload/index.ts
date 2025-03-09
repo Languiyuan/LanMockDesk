@@ -22,6 +22,11 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
   // ...
 })
 
+// 暴露操作系统信息给渲染进程
+contextBridge.exposeInMainWorld('os', {
+  platform: process.platform
+})
+
 // --------- Preload scripts loading ---------
 function domReady(condition: DocumentReadyState[] = ['complete', 'interactive']) {
   return new Promise((resolve) => {

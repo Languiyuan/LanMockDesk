@@ -5,7 +5,7 @@
     :style="{ width: isCollapsed ? '0px' : width + 'px' }"
   >
     <div class="h-16 flex items-center px-4">
-      <n-button class="mr-2" text style="font-size: 24px" :focusable="false">
+      <n-button class="mr-2" text style="font-size: 24px" :focusable="false" @click="showSelectModal = true">
         <n-icon>
           <Add />
         </n-icon>
@@ -34,6 +34,8 @@
         ></ProjectCard>
       </n-scrollbar>
     </div>
+    <SelectProjectModal v-model:show="showSelectModal" @select="handleSelectOption" />
+    <CreateProjectModal v-model:show="showCreateModal" @confirm="handleAddProject" />
   </div>
 </template>
 
@@ -42,31 +44,15 @@ import { ref } from "vue";
 import { Add, FlashOutline } from "@vicons/ionicons5";
 import { NButton, NInput, NIcon, NScrollbar } from "naive-ui";
 import ProjectCard from "./ProjectCard.vue";
+import SelectProjectModal from "./SelectProjectModal.vue";
+import CreateProjectModal from "./CreateProjectModal.vue";
 import { ProjectInfo } from "../types";
 
 const props = defineProps<{
   isCollapsed: boolean
 }>();
 
-const projectList = ref<ProjectInfo[]>([
-  {
-    projectName: "示例项目",
-    projectSign: "example",
-    baseUrl: "http://12.com",
-    createTime: "2023-01-01 12:00:00",
-    updateTime: "2023-01-01",
-    dbPath: "34234",
-    status: 1,
-  },
-  {
-    projectName: "示例项目2",
-    projectSign: "example2",
-    baseUrl: "http://121.com",
-    createTime: "2023-01-01 12:00:00",
-    updateTime: "2023-01-01",
-    status: 2,
-  },
-]);
+const projectList = ref<ProjectInfo[]>([]);
 
 const curSelProject = ref<ProjectInfo | null>(null);
 const emit = defineEmits<{
@@ -78,6 +64,19 @@ const handleSelProject = (projectInfo: ProjectInfo) => {
 };
 
 const width = ref(400);
+const showSelectModal = ref(false);
+const showCreateModal = ref(false);
+
+const handleAddProject = (project: ProjectInfo) => {
+  projectList.value.push(project);
+};
+
+const handleSelectOption = (option: 'create' | 'link') => {
+  if (option === 'create') {
+    showCreateModal.value = true;
+  }
+  // TODO: 处理链接项目的逻辑
+};
 let startX = 0;
 let startWidth = 0;
 
