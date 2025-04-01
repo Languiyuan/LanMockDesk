@@ -35,7 +35,7 @@
     "ace-builds": "1.32.8",
     "dayjs": "^1.11.13",
     "electron": "^29.1.1",
-    "electron-builder": "^24.13.3",
+    "electron-builder": "^26.0.12",
     "js-beautify": "^1.15.1",
     "naive-ui": "^2.41.0",
     "sass": "^1.84.0",
