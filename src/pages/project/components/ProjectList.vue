@@ -47,12 +47,15 @@ import ProjectCard from "./ProjectCard.vue";
 import SelectProjectModal from "./SelectProjectModal.vue";
 import CreateProjectModal from "./CreateProjectModal.vue";
 import { ProjectInfo } from "../types";
+import { useAppConfig } from "../../../stores/modules/appConfig";
+import { storeToRefs } from "pinia";
 
 const props = defineProps<{
   isCollapsed: boolean
 }>();
 
-const projectList = ref<ProjectInfo[]>([]);
+const appConfigStore = useAppConfig();
+const { projectList } = storeToRefs(appConfigStore);
 
 const curSelProject = ref<ProjectInfo | null>(null);
 const emit = defineEmits<{
@@ -68,7 +71,7 @@ const showSelectModal = ref(false);
 const showCreateModal = ref(false);
 
 const handleAddProject = (project: ProjectInfo) => {
-  projectList.value.push(project);
+  appConfigStore.addProject(project);
 };
 
 const handleSelectOption = (option: 'create' | 'link') => {

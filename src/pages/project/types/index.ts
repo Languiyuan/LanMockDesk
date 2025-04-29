@@ -1,10 +1,21 @@
+/** 项目连接状态枚举 */
+export enum ProjectConnectionStatus {
+  /** 已连接 */
+  Connected = 1,
+  /** 可连接 */
+  Connectable = 2,
+  /** 不可连接 */
+  Disconnected = 3
+}
+
 export interface ProjectInfo {
   projectName: string
   projectSign: string
   baseUrl: string
   createTime: string
   updateTime: string
-  status: number
+  /** 项目连接状态: 1-已连接 | 2-可连接 | 3-不可连接 */
+  status: ProjectConnectionStatus
   dbPath?: string
 }
 

@@ -3,6 +3,7 @@ import { NConfigProvider, NMessageProvider } from 'naive-ui'
 import { darkTheme, lightTheme } from 'naive-ui'
 import { computed, onMounted } from 'vue'
 import { useAppConfig } from './stores/modules/appConfig'
+import { AppConfig } from './stores/interface/index';
 
 const appConfigStore = useAppConfig()
 console.log(appConfigStore)
@@ -12,7 +13,7 @@ onMounted(() => {
   // appConfigStore.changeTheme('darkTheme'); // 这会触发 setItem
   window.ipcRenderer.on('app-config', (_event, ...args) => {
   console.log('[Receive Main-process message]:', ...args)
-  const config = args[0]
+  const config: AppConfig = args[0]
   config.theme && appConfigStore.changeTheme(config.theme)
   config.projectList && appConfigStore.setProjectList(config.projectList)
 })

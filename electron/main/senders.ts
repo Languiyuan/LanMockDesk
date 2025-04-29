@@ -11,13 +11,21 @@ export function initAppConfig(win: BrowserWindow) {
   if (fs.existsSync(appConfigPath)) {
     try {
       const data = fs.readFileSync(appConfigPath, 'utf8')
-      appConfig = JSON.parse(data)
+      const config = JSON.parse(data)
+      // 更新项目状态
+      if (config.projectList) {
+        config.projectList = config.projectList.map(project => ({
+          ...project,
+          status: project.dbPath && fs.existsSync(project.dbPath) ? 2 : 3
+        }))
+      }
+      appConfig = config
     } catch (error) {
       console.error('Failed to read appConfig.json:', error)
     }
   }
-    // 发送 appConfig 到渲染进程
-    win.webContents.on('did-finish-load', () => {
-      win.webContents.send('app-config', appConfig)
-    })
+  // 发送 appConfig 到渲染进程
+  win.webContents.on('did-finish-load', () => {
+    win.webContents.send('app-config', appConfig)
+  })
 }

@@ -68,11 +68,12 @@ const rules: FormRules = {
     {
       validator: (rule: FormItemRule, value: string) => {
         if (!value) return true;
+        return true;
+        // return /^[a-zA-Z]:\\[^\\:\*\?"<>\|]*$/.test(value) || new Error('无效的Windows文件夹路径');
         const platform  = window.os.platform();
         const isWindows = platform === 'win32';
         const isMac = platform === 'darwin';
         const isLinux = platform === 'linux';
-
         if (isWindows) {
           // Windows路径格式验证：盘符:\路径
           return /^[a-zA-Z]:\\[^\\:\*\?"<>\|]*$/.test(value) || new Error('无效的Windows文件夹路径');
