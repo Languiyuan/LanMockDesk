@@ -14,4 +14,5 @@ https://github.com/WiseLibs/better-sqlite3/issues/549#issuecomment-774506826
 npm i  
 npm run dev
 ```
+不支持pnpm
 windows打包需要管理员权限
