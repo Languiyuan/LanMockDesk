@@ -34,7 +34,7 @@
     "@vueuse/core": "^10.9.0",
     "ace-builds": "1.32.8",
     "dayjs": "^1.11.13",
-    "electron": "^29.1.1",
+    "electron": "^35.1.2",
     "electron-builder": "^24.13.3",
     "js-beautify": "^1.15.1",
     "naive-ui": "^2.41.0",
