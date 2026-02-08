@@ -17,7 +17,7 @@
       <div class="flex-shrink-0">
         <ProjectDescriptions :project-info="currentProject"></ProjectDescriptions>
       </div>
-      <ApiList></ApiList>
+      <ApiList :project-info="currentProject"></ApiList>
     </div>
   </div>
 </template>

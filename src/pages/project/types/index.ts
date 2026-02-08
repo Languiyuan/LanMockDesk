@@ -9,6 +9,7 @@ export enum ProjectConnectionStatus {
 }
 
 export interface ProjectInfo {
+  id?: number
   projectName: string
   projectSign: string
   baseUrl: string

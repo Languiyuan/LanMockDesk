@@ -29,7 +29,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
+import { ref, reactive, watch } from 'vue'
 import { NModal, NForm, NFormItem, NInput, NButton, NSpace, NIcon, NInputGroup, FormInst, FormRules, FormItemRule } from 'naive-ui'
 import { FolderOutline } from '@vicons/ionicons5'
 import type { ProjectInfo } from '../types'
@@ -37,6 +37,7 @@ import { useLinkDB } from '../../../hooks/useLinkDB'
 
 const props = defineProps<{
   show: boolean
+  project?: ProjectInfo
 }>()
 
 const emit = defineEmits<{
@@ -51,6 +52,20 @@ const formValue = reactive({
   projectName: '',
   baseUrl: '',
   dbPath: ''
+})
+
+watch(() => props.show, (val) => {
+  if (val) {
+    if (props.project) {
+      formValue.projectName = props.project.projectName
+      formValue.baseUrl = props.project.baseUrl
+      formValue.dbPath = props.project.dbPath || ''
+    } else {
+      formValue.projectName = ''
+      formValue.baseUrl = ''
+      formValue.dbPath = ''
+    }
+  }
 })
 
 const rules: FormRules = {
@@ -69,19 +84,6 @@ const rules: FormRules = {
       validator: (rule: FormItemRule, value: string) => {
         if (!value) return true;
         return true;
-        // return /^[a-zA-Z]:\\[^\\:\*\?"<>\|]*$/.test(value) || new Error('无效的Windows文件夹路径');
-        const platform  = window.os.platform();
-        const isWindows = platform === 'win32';
-        const isMac = platform === 'darwin';
-        const isLinux = platform === 'linux';
-        if (isWindows) {
-          // Windows路径格式验证：盘符:\路径
-          return /^[a-zA-Z]:\\[^\\:\*\?"<>\|]*$/.test(value) || new Error('无效的Windows文件夹路径');
-        } else if (isMac || isLinux) {
-          // Unix-like系统路径格式验证：以/开头
-          return /^\/[^\0]*$/.test(value) || new Error('无效的文件夹路径');
-        }
-        return true;
       },
       trigger: ['blur', 'input']
     }
@@ -92,12 +94,12 @@ const handleClose = () => {
   emit('update:show', false)
 }
 
-const { selectedFolderPath, selectFolder, generateRandomString } = useLinkDB()
+const { selectedFolderPath, selectedDatabaseFilePath, selectFolder, generateRandomString } = useLinkDB()
 
 const handleSelectFolder = async () => {
   await selectFolder()
-  if (selectedFolderPath.value) {
-    formValue.dbPath = selectedFolderPath.value
+  if (selectedDatabaseFilePath.value) {
+    formValue.dbPath = selectedDatabaseFilePath.value
   }
 }
 
@@ -105,13 +107,24 @@ const handleConfirm = () => {
   formRef.value?.validate((errors) => {
     if (!errors) {
       loading.value = true
-      const projectInfo: ProjectInfo = {
-        ...formValue,
-        projectSign: generateRandomString(20),
-        createTime: new Date().toISOString(),
-        updateTime: new Date().toISOString(),
-        status: 1
+      let projectInfo: ProjectInfo;
+      
+      if (props.project) {
+         projectInfo = {
+          ...props.project,
+          ...formValue,
+          updateTime: new Date().toISOString()
+        }
+      } else {
+        projectInfo = {
+          ...formValue,
+          projectSign: generateRandomString(20),
+          createTime: new Date().toISOString(),
+          updateTime: new Date().toISOString(),
+          status: 1
+        }
       }
+      
       emit('confirm', projectInfo)
       loading.value = false
       handleClose()
