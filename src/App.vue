@@ -4,6 +4,7 @@ import { darkTheme, lightTheme } from 'naive-ui'
 import { computed, onMounted, watch } from 'vue'
 import { useAppConfig } from './stores/modules/appConfig'
 import { AppConfig } from './stores/interface/index';
+import TitleBar from './components/TitleBar.vue'
 
 const appConfigStore = useAppConfig()
 console.log(appConfigStore)
@@ -36,14 +37,17 @@ onMounted(() => {
 
 <template>
   <div
-    class="h-screen w-screen bg-white dark:bg-[#242424]"
+    class="h-screen w-screen bg-white dark:bg-[#242424] flex flex-col"
   >
     <NConfigProvider :theme="theme === 'darkTheme' ? darkTheme : lightTheme">
-      <NMessageProvider>
-        <NDialogProvider>
-          <RouterView />
-        </NDialogProvider>
-      </NMessageProvider>
+      <TitleBar />
+      <div class="flex-1 overflow-hidden relative">
+        <NMessageProvider>
+          <NDialogProvider>
+            <RouterView />
+          </NDialogProvider>
+        </NMessageProvider>
+      </div>
     </NConfigProvider>
   </div>
 </template>

@@ -1,4 +1,4 @@
-import { app, BrowserWindow, shell, ipcMain } from 'electron'
+import { app, BrowserWindow, shell, ipcMain, Menu } from 'electron'
 import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
@@ -54,6 +54,7 @@ async function createWindow() {
   win = new BrowserWindow({
     title: 'Main window',
     icon: path.join(process.env.VITE_PUBLIC, 'favicon.ico'),
+    frame: false,
     width: 1200,
     height: 800,
     minWidth: 940,
@@ -75,6 +76,24 @@ async function createWindow() {
   } else {
     win.loadFile(indexHtml)
   }
+
+  // Remove application menu
+  Menu.setApplicationMenu(null)
+
+  // Window controls IPC
+  ipcMain.on('window-minimize', () => {
+    win?.minimize()
+  })
+  ipcMain.on('window-maximize', () => {
+    if (win?.isMaximized()) {
+      win.unmaximize()
+    } else {
+      win?.maximize()
+    }
+  })
+  ipcMain.on('window-close', () => {
+    win?.close()
+  })
 
   // 初始化appConfig
   initAppConfig(win)

@@ -27,9 +27,41 @@ body {
   margin: 0;
   display: flex;
   place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  min-width: 940px; /* Match Electron minWidth */
+  min-height: 500px; /* Match Electron minHeight */
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
 }
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #999;
+}
+
+/* Dark mode scrollbar overrides are handled by media query below or .dark class */
+html.dark ::-webkit-scrollbar-thumb {
+  background: #444;
+}
+
+html.dark ::-webkit-scrollbar-thumb:hover {
+  background: #666;
+}
+
 
 h1 {
   font-size: 3.2em;
@@ -87,4 +119,13 @@ code {
   code {
     background-color: #f9f9f9;
   } */
+}
+
+/* Pagination Style Override */
+.n-data-table .n-data-table__pagination {
+  display: flex;
+  justify-content: flex-end;
+  height: 78px;
+  align-items: center;
+  padding-bottom: 20px;
 }

@@ -1,9 +1,8 @@
 <template>
-  <div class="flex-1 flex flex-col">
+  <div class="h-full flex flex-col overflow-hidden">
     <!-- 搜索表单 -->
-    <div class="px-4">
-      <n-form inline :model="searchForm" class="flex items-center justify-between w-full">
-        <div class="flex items-center gap-4">
+    <div class="px-4 flex-shrink-0">
+      <n-form inline :model="searchForm" class="flex items-center w-full">
           <n-form-item label="接口名称" path="name">
             <n-input v-model:value="searchForm.name" placeholder="请输入接口名称" class="text-left" />
           </n-form-item>
@@ -26,29 +25,27 @@
           <n-form-item>
             <n-button type="primary" @click="handleSearch" :loading="loading" :disabled="!canOperate">搜索</n-button>
           </n-form-item>
-        </div>
-        <n-form-item>
-            <n-button type="info" @click="openCreateEditor" :disabled="!canOperate">新建接口</n-button>
-          </n-form-item>
-          <n-form-item>
-             <n-button @click="handleImportSwagger" :loading="importLoading" :disabled="!canOperate">导入 Swagger</n-button>
-          </n-form-item>
-        </n-form>
+      </n-form>
+      
+      <!-- 操作按钮行 -->
+      <div class="flex justify-end gap-2 mb-2">
+         <n-button type="info" @click="openCreateEditor" :disabled="!canOperate">新建接口</n-button>
+         <n-button @click="handleImportSwagger" :loading="importLoading" :disabled="!canOperate">导入 Swagger</n-button>
+      </div>
     </div>
 
     <!-- 数据表格 -->
-    <div class="flex-1 p-4 overflow-auto">
+    <div class="flex-1 p-4 overflow-hidden flex flex-col min-h-0">
       <n-data-table
         :columns="columns"
         :data="tableData"
         :pagination="pagination"
         :bordered="false"
         :scroll-x="1200"
-        style="height: 100%"
+        class="flex-1"
         striped
         flex-height
         :loading="loading"
-        remote
       />
     </div>
     <FullScreenApiEditor
@@ -342,7 +339,6 @@ const fetchData = async () => {
       projectId: projectInfo.id
     })
     tableData.value = res
-    pagination.itemCount = res.length
   } catch (error) {
     console.error('获取数据失败:', error)
     message.error('获取接口列表失败')
@@ -391,7 +387,6 @@ const handleSearch = async () => {
         const matchFolder = !selected.length || selected.includes('none') && !item.catalogId || selected.includes(item.catalogId as any)
         return matchName && matchUrl && matchFolder
     })
-    pagination.itemCount = tableData.value.length
     pagination.page = 1
   } finally {
       loading.value = false

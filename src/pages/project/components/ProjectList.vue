@@ -11,12 +11,6 @@
         </n-icon>
       </n-button>
 
-      <n-button class="mr-2" text style="font-size: 24px" :focusable="false" @click="toggleTheme">
-        <n-icon>
-          <component :is="appConfigStore.theme === 'darkTheme' ? Sunny : Moon" />
-        </n-icon>
-      </n-button>
-
       <n-input class="text-left" type="text" placeholder="name or url">
         <template #suffix>
           <n-icon :component="FlashOutline" />
@@ -52,7 +46,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { Add, FlashOutline, Moon, Sunny } from "@vicons/ionicons5";
+import { Add, FlashOutline } from "@vicons/ionicons5";
 import { NButton, NInput, NIcon, NScrollbar, useDialog, useMessage } from "naive-ui";
 import ProjectCard from "./ProjectCard.vue";
 import SelectProjectModal from "./SelectProjectModal.vue";
@@ -70,10 +64,6 @@ const appConfigStore = useAppConfig();
 const { projectList } = storeToRefs(appConfigStore);
 const dialog = useDialog();
 const message = useMessage();
-
-const toggleTheme = () => {
-  appConfigStore.changeTheme(appConfigStore.theme === 'darkTheme' ? 'lightTheme' : 'darkTheme')
-}
 
 const curSelProject = ref<ProjectInfo | null>(null);
 const emit = defineEmits<{
