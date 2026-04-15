@@ -1,13 +1,23 @@
 <script setup lang="ts">
-import { NConfigProvider, NMessageProvider } from 'naive-ui'
+import { NConfigProvider, NMessageProvider, NDialogProvider } from 'naive-ui'
 import { darkTheme, lightTheme } from 'naive-ui'
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, watch } from 'vue'
 import { useAppConfig } from './stores/modules/appConfig'
 import { AppConfig } from './stores/interface/index';
+import TitleBar from './components/TitleBar.vue'
 
 const appConfigStore = useAppConfig()
 console.log(appConfigStore)
 const theme = computed(() => appConfigStore.theme)
+
+watch(theme, (val) => {
+  if (val === 'darkTheme') {
+    document.documentElement.classList.add('dark')
+  } else {
+    document.documentElement.classList.remove('dark')
+  }
+}, { immediate: true })
+
 onMounted(() => {
   // appConfigStore.changeTheme('darkTheme');
   // appConfigStore.changeTheme('darkTheme'); // 这会触发 setItem
@@ -27,13 +37,17 @@ onMounted(() => {
 
 <template>
   <div
-    class="h-screen w-screen"
-    :style="{ backgroundColor: theme === 'darkTheme' ? '#242424' : '#ffffff' }"
+    class="h-screen w-screen bg-white dark:bg-[#242424] flex flex-col"
   >
     <NConfigProvider :theme="theme === 'darkTheme' ? darkTheme : lightTheme">
-      <NMessageProvider>
-        <RouterView />
-      </NMessageProvider>
+      <TitleBar />
+      <div class="flex-1 overflow-hidden relative">
+        <NMessageProvider>
+          <NDialogProvider>
+            <RouterView />
+          </NDialogProvider>
+        </NMessageProvider>
+      </div>
     </NConfigProvider>
   </div>
 </template>

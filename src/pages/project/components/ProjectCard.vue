@@ -26,14 +26,19 @@
               </n-button>
             </n-dropdown>
 
-            <n-switch v-model:value="active" :disabled="info.status === 3"  @click.stop="() => {}"/>
+            <n-switch
+              :value="props.enabled"
+              :disabled="info.status === 3 || !info.dbPath || !info.id"
+              @update:value="(v) => emit('toggle-enabled', props.info, v)"
+              @click.stop="() => {}"
+            />
           </div>
 
           <div class="flex justify-between mt-4">
-            <n-ellipsis class="text-gray-400 text-sm" :style="{ maxWidth: `calc(100% - ${width >= 300 ? 120 : 20}px)` }">
+            <n-ellipsis class="text-gray-500 dark:text-gray-300 text-sm" :style="{ maxWidth: `calc(100% - ${width >= 300 ? 120 : 20}px)` }">
               {{ info.baseUrl }}
             </n-ellipsis>
-            <div v-if="width >= 300" class="text-gray-400 text-sm" :title="info.createTime">{{ formatDate(info.createTime) }}</div>
+            <div v-if="width >= 300" class="text-gray-500 dark:text-gray-300 text-sm" :title="info.createTime">{{ formatDate(info.createTime) }}</div>
           </div>
         </div>
       </template>
@@ -60,6 +65,7 @@ const props = defineProps<{
   info: ProjectInfo
   isCur: boolean
   width: number
+  enabled: boolean
 }>()
 
 const dotColor = computed(() => {
@@ -80,8 +86,19 @@ const options = ref([
   { label: '删除', key: 'delete', icon:renderIcon(TrashOutline) },
 ])
 
+const emit = defineEmits<{
+  (e: 'edit', project: ProjectInfo): void
+  (e: 'delete', project: ProjectInfo): void
+  (e: 'toggle-enabled', project: ProjectInfo, enabled: boolean): void
+}>()
+
 const handleSelect = (key: string) => {
-  console.log(key)
+  if (key === 'edit') {
+    emit('edit', props.info)
+  }
+  if (key === 'delete') {
+    emit('delete', props.info)
+  }
 }
 
 const formatDate = (date: string) => {
@@ -93,7 +110,6 @@ const formatDate = (date: string) => {
   return targetDate.format('YYYY-MM-DD')
 }
 
-const active = ref(false)
 </script>
 
 <style lang="scss" scoped></style>

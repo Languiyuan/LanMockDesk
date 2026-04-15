@@ -2,6 +2,7 @@ import { BrowserWindow} from 'electron'
 import path from 'path'
 import fs from 'fs'
 import { app } from 'electron'
+import { ensureDatabaseInitialized } from '../db'
 
 export function initAppConfig(win: BrowserWindow) {
   // 读取 appConfig.json 文件
@@ -14,10 +15,27 @@ export function initAppConfig(win: BrowserWindow) {
       const config = JSON.parse(data)
       // 更新项目状态
       if (config.projectList) {
-        config.projectList = config.projectList.map(project => ({
-          ...project,
-          status: project.dbPath && fs.existsSync(project.dbPath) ? 2 : 3
-        }))
+        config.projectList = config.projectList.map((project: any) => {
+          const exists = project.dbPath && fs.existsSync(project.dbPath);
+          let isFile = false;
+          if (exists) {
+            try {
+              isFile = fs.statSync(project.dbPath).isFile();
+            } catch { }
+          }
+          if (isFile) {
+              // Initialize DB connection for Mock Server
+              try {
+                  ensureDatabaseInitialized(project.dbPath);
+              } catch (e) {
+                  console.error(`Failed to init DB at ${project.dbPath}`, e);
+              }
+          }
+          return {
+            ...project,
+            status: isFile ? 2 : 3
+          }
+        })
       }
       appConfig = config
     } catch (error) {

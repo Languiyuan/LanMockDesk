@@ -5,9 +5,12 @@ export function useLinkDB() {
   const selectedDatabaseFilePath = ref<string | null>(null);
 
   async function selectFolder() {
-    const { canceled, filePaths } = await window.ipcRenderer.invoke("showFolderDialog");
+    const { canceled, filePaths, dbPath } = await window.ipcRenderer.invoke("showFolderDialog");
     if (!canceled && filePaths.length > 0) {
       selectedFolderPath.value = filePaths[0];
+      if (dbPath) {
+        selectedDatabaseFilePath.value = dbPath;
+      }
     }
   }
 

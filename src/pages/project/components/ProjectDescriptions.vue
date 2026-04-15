@@ -1,5 +1,5 @@
 <template>
-  <div class="px-4 py-4 bg-pink">
+  <div class="px-4 py-4">
     <n-descriptions label-placement="left" bordered label-class="w-32" content-style="text-align: left;">
       <n-descriptions-item>
         <template #label>
@@ -29,10 +29,10 @@
         </template>
         <div 
           class="cursor-pointer hover:text-primary" 
-          @click="copyToClipboard(projectInfo?.baseUrl)" 
+          @click="copyToClipboard(getFullUrl(projectInfo?.projectSign, projectInfo?.baseUrl))" 
           :title="'点击复制'"
         >
-          {{ projectInfo?.baseUrl || "-" }}
+          {{ getFullUrl(projectInfo?.projectSign, projectInfo?.baseUrl) }}
         </div>
       </n-descriptions-item>
     </n-descriptions>
@@ -49,9 +49,17 @@ defineProps<{
 }>();
 
 const message = useMessage();
+const SERVER_ORIGIN = 'http://localhost:4399';
+
+const getFullUrl = (projectSign?: string, baseUrl?: string) => {
+  if (!projectSign || !baseUrl) return '-';
+  const signPrefix = projectSign.startsWith('/') ? projectSign : `/${projectSign}`;
+  const basePart = baseUrl.startsWith('/') ? baseUrl : `/${baseUrl}`;
+  return `${SERVER_ORIGIN}${signPrefix}${basePart}`;
+};
 
 const copyToClipboard = (text: string | undefined) => {
-  if (!text) return;
+  if (!text || text === '-') return;
   
   navigator.clipboard.writeText(text)
     .then(() => {
